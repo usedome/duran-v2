@@ -1,7 +1,19 @@
 import express from "express";
-import { createBackupMiddleware } from "../middleware";
+import { createBackupMiddleware, fileMiddleware } from "../middleware";
 import { createBackup } from "../actions";
+import { check } from "express-validator";
 
 export const backupRouter = express.Router();
 
-backupRouter.post("/:resource_uuid", createBackupMiddleware, createBackup);
+backupRouter.post(
+  "/:resource_uuid",
+  fileMiddleware.single("backup"),
+  check("backup")
+    .custom((_, { req }) => {
+      if (!req?.file) return false;
+      return Boolean(req?.file?.mimetype);
+    })
+    .withMessage("backup is required"),
+  createBackupMiddleware,
+  createBackup
+);

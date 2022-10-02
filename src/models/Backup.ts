@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import { uuidPlugin } from "../utilities";
 import { TResource } from "./Resource";
 
 export type TBackup = {
@@ -13,7 +12,7 @@ export type TBackup = {
 
 const backupSchema = new Schema<TBackup>(
   {
-    uuid: { type: String },
+    uuid: { type: String, required: true },
     resource: { type: Schema.Types.ObjectId, ref: "Resource", required: true },
     url: { type: String, required: true },
   },
@@ -21,7 +20,5 @@ const backupSchema = new Schema<TBackup>(
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
   }
 );
-
-backupSchema.plugin(uuidPlugin);
 
 export const Backup = model<TBackup>("Backup", backupSchema);
