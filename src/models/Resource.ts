@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { resourcePlugin } from "../utilities";
 import { TService } from "./Service";
 
 export type TResource = {
@@ -22,5 +23,7 @@ const resourceSchema = new Schema<TResource>(
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
   }
 );
+
+resourceSchema.plugin(resourcePlugin);
 
 export const Resource = model<TResource>("Resource", resourceSchema);
