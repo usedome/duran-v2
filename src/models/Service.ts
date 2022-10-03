@@ -1,4 +1,5 @@
 import { Schema, model, HydratedDocument } from "mongoose";
+import { capitalize } from "../utilities";
 import { TUser } from "./User";
 
 type TServiceApiKey = {
@@ -37,7 +38,11 @@ const serviceSchema = new Schema<TService>(
   {
     uuid: { type: String },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    name: { type: String, required: true },
+    name: {
+      type: String,
+      required: true,
+      get: (name: string) => capitalize(name),
+    },
     description: { type: String },
     backup_duration: { type: String, required: true },
     api_keys: { type: Schema.Types.Mixed, required: true },
