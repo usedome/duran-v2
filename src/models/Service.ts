@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, HydratedDocument } from "mongoose";
 import { TUser } from "./User";
 
 type TServiceApiKey = {
@@ -22,7 +22,7 @@ type TServiceNotification = {
 export type TService = {
   _id: Schema.Types.ObjectId;
   uuid: string;
-  user: TUser;
+  user: HydratedDocument<TUser>;
   name: string;
   description?: string;
   backup_duration: string;

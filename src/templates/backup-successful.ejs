@@ -12,8 +12,8 @@
                 <td>
                     <div style="margin: 10px 0">
                         <p style="margin: 0 0 10px 0">
-                            Hello <%= user.first_name %>. A new backup for <%= resource.name.capitalize() %> 
-                            (<%= resource.service.name.capitalize() %>) was just made successfully.
+                            Hello <%= resource.service.user.first_name %>. A new backup for <%= resource.name.toUpperCase() %> 
+                            (<%= resource.service.name.toUpperCase() %>) was just made successfully.
                         </p>
                         <p><%= timestamp %></p>
                     </div>
@@ -27,4 +27,4 @@
         </table>
     </div>
 
-<%- include('layouts/layout-end.ejs') %>
+<%- include('layouts/layout-bottom.ejs') %>

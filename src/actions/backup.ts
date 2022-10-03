@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
+import { EventEmitter } from "events";
 import { Backup, Resource } from "../models";
-import { uploadToCloudinary, throwException } from "../utilities";
+import { uploadToCloudinary, throwException, eventEmitter } from "../utilities";
 
 export const createBackup = async (
   request: Request,
@@ -25,7 +26,10 @@ export const createBackup = async (
       "there was a problem completing the request"
     );
 
+  await resource.service.populate("user");
+
   const backup = await Backup.create({ uuid, url, resource: resource._id });
+  eventEmitter.emit("backup.successful", resource);
 
   response
     .status(201)

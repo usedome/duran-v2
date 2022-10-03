@@ -1,11 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, HydratedDocument } from "mongoose";
 import { resourcePlugin } from "../utilities";
 import { TService } from "./Service";
 
 export type TResource = {
   _id: Schema.Types.ObjectId;
   uuid: string;
-  service: TService;
+  service: HydratedDocument<TService>;
   name: string;
   description?: string;
   is_active: boolean;
