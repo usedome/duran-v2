@@ -1,0 +1,30 @@
+<%- include('layouts/layout-top.ejs') %>
+
+    <div class="content">
+        <table align="center">
+            <tr>
+                <td align="center">
+                    <img width="60px" height="60px" class="icon-success"
+                        src="https://res.cloudinary.com/olamileke/image/upload/v1660687381/backmeup/assets/email/check_rmths4.png" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="margin: 10px 0">
+                        <p style="margin: 0 0 10px 0">
+                            Hello <%= user.first_name %>. A new backup for <%= resource.name.capitalize() %> 
+                            (<%= resource.service.name.capitalize() %>) was just made successfully.
+                        </p>
+                        <p><%= timestamp %></p>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <button style="margin: 10px 0">Manage Your Backups</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+<%- include('layouts/layout-end.ejs') %>

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import { Resource } from "../models";
+import { Backup, Resource } from "../models";
 import { uploadToCloudinary, throwException } from "../utilities";
 
 export const createBackup = async (
@@ -25,5 +25,9 @@ export const createBackup = async (
       "there was a problem completing the request"
     );
 
-  response.status(200).json({ resource_uuid });
+  const backup = await Backup.create({ uuid, url, resource: resource._id });
+
+  response
+    .status(201)
+    .json({ backup, message: "resource backedup successfully" });
 };
