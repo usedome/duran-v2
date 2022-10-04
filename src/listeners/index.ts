@@ -10,6 +10,17 @@ export const backupSuccessfulListener = (resource: TResource) => {
   });
 };
 
-export const backupWrongCredentialsListener = (resource: TResource) => {};
+export const backupWrongCredentialsListener = (
+  resource: TResource,
+  apiKey?: string
+) => {
+  const mail = new Mail();
+  mail.send({
+    subject: `${resource.service.name} - Unauthorized Backup Request`,
+    resource,
+    template: "backup-wrong_credentials.ejs",
+    apiKey,
+  });
+};
 
 export const backupUnauthorizedIpListener = (resource: TResource) => {};

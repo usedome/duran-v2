@@ -25,6 +25,7 @@ export const uploadToCloudinary = async (
     });
     return { uuid, url: response.secure_url };
   } catch (error) {
+    console.log(error);
     return null;
   }
 };

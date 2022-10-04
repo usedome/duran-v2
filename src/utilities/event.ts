@@ -4,9 +4,9 @@ import {
   backupWrongCredentialsListener,
 } from "../listeners";
 
-export const initEvents = () => {
-  const eventEmitter = new EventEmitter();
+export const eventEmitter = new EventEmitter();
 
+export const initEvents = () => {
   eventEmitter.on("backup.successful", backupSuccessfulListener);
   eventEmitter.on("backup.wrong.credentials", backupWrongCredentialsListener);
 };

@@ -1,10 +1,10 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, HydratedDocument } from "mongoose";
 import { TResource } from "./Resource";
 
 export type TBackup = {
   _id: Schema.Types.ObjectId;
   uuid: string;
-  resource: TResource;
+  resource: HydratedDocument<TResource>;
   url: string;
   created_at: Date;
   updated_at: Date;

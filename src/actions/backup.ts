@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { Backup, Resource } from "../models";
-import { uploadToCloudinary, throwException } from "../utilities";
+import { uploadToCloudinary, throwException, eventEmitter } from "../utilities";
 
 export const createBackup = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  _: NextFunction
 ) => {
   const errors = validationResult(request);
 
@@ -16,16 +16,21 @@ export const createBackup = async (
   const { resource_uuid } = request.params;
   const resource = await Resource.findOne({ uuid: resource_uuid });
 
-  const { uuid, url } = await uploadToCloudinary(resource, request.file);
+  const uploadResponse = await uploadToCloudinary(resource, request.file);
 
-  if (!uuid)
+  if (!uploadResponse)
     return throwException(
       response,
       424,
       "there was a problem completing the request"
     );
 
+  const { uuid, url } = uploadResponse;
+
+  await resource.service.populate("user");
+
   const backup = await Backup.create({ uuid, url, resource: resource._id });
+  eventEmitter.emit("backup.successful", resource);
 
   response
     .status(201)

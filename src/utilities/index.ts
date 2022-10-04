@@ -4,4 +4,5 @@ export * from "./event";
 export * from "./date";
 export * from "./exception";
 export * from "./plugins";
+export * from "./string";
 export * from "./upload";
