@@ -8,6 +8,7 @@ import { getTimestamp } from "../utilities";
 
 type TMailParams = {
   resource: TResource;
+  apiKey?: string;
   subject: string;
   template: string;
 };
@@ -30,7 +31,11 @@ export class Mail {
 
       renderFile(
         templatePath,
-        { resource, timestamp: getTimestamp() },
+        {
+          resource,
+          timestamp: getTimestamp(),
+          apiKey: params?.apiKey ?? undefined,
+        },
         async (error, html) => {
           if (error) throw error;
 

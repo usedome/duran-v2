@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { throwException } from "../utilities";
+import { throwException, eventEmitter } from "../utilities";
 import { Resource } from "../models";
 
 export const createBackupMiddleware = async (
@@ -19,17 +19,21 @@ export const createBackupMiddleware = async (
 
   const authHeader = request.headers?.authorization;
   let isAuthorized = false;
+  let apiKey;
 
   if (!authHeader || authHeader.split(" ").length !== 2) isAuthorized = false;
   else {
-    const apiKey = authHeader.split(" ")[1];
+    apiKey = authHeader.split(" ")[1];
     isAuthorized = resource.service.api_keys
       .map(({ key }) => key)
       .includes(apiKey);
   }
 
-  if (!isAuthorized)
+  if (!isAuthorized) {
+    await resource.service.populate("user");
+    eventEmitter.emit("backup.wrong.credentials", resource, apiKey);
     return throwException(response, 401, `valid api key is needed`);
+  }
 
   next();
 };
