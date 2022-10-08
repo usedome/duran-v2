@@ -30,8 +30,13 @@ export const createBackupMiddleware = async (
   }
 
   if (!isAuthorized) {
-    await resource.service.populate("user");
-    eventEmitter.emit("backup.wrong.credentials", resource, apiKey);
+    const {
+      service: {
+        notifications: { events },
+      },
+    } = resource;
+    events?.BR_WRONG_CREDENTIALS &&
+      eventEmitter.emit("backup.wrong.credentials", resource, apiKey);
     return throwException(response, 401, `valid api key is needed`);
   }
 
