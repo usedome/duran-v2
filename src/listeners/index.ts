@@ -1,7 +1,10 @@
+import { HydratedDocument } from "mongoose";
 import { TResource } from "../models";
 import { Mail } from "../channels";
 
-export const backupSuccessfulListener = (resource: TResource) => {
+export const backupSuccessfulListener = (
+  resource: HydratedDocument<TResource>
+) => {
   const mail = new Mail();
   mail.send({
     subject: `${resource.service.name} - New Backup`,
@@ -10,10 +13,12 @@ export const backupSuccessfulListener = (resource: TResource) => {
   });
 };
 
-export const backupWrongCredentialsListener = (
-  resource: TResource,
+export const backupWrongCredentialsListener = async (
+  resource: HydratedDocument<TResource>,
   apiKey?: string
 ) => {
+  await resource.service.populate("user");
+
   const mail = new Mail();
   mail.send({
     subject: `${resource.service.name} - Unauthorized Backup Request`,

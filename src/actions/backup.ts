@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import { Backup, Resource } from "../models";
+import { HydratedDocument } from "mongoose";
+import { Backup, Resource, TService } from "../models";
 import { uploadToCloudinary, throwException, eventEmitter } from "../utilities";
 
 export const createBackup = async (
@@ -30,9 +31,27 @@ export const createBackup = async (
   await resource.service.populate("user");
 
   const backup = await Backup.create({ uuid, url, resource: resource._id });
-  eventEmitter.emit("backup.successful", resource);
+  const {
+    service: {
+      notifications: { events },
+    },
+  } = resource;
+  events?.BR_SUCCESSFUL && eventEmitter.emit("backup.successful", resource);
 
-  response
-    .status(201)
-    .json({ backup, message: "resource backedup successfully" });
+  updateServiceApiKey(request, resource.service);
+
+  response.status(201).json({ backup, message: "backup created successfully" });
+};
+
+const updateServiceApiKey = async (
+  request: Request,
+  service: HydratedDocument<TService>
+) => {
+  const authHeader = request.headers?.authorization;
+  const apiKey = authHeader.split(" ")[1];
+  const apiKeys = [...service.api_keys];
+  const index = apiKeys.findIndex(({ key }) => key === apiKey);
+  apiKeys[index] = { ...apiKeys[index], last_used: new Date() };
+  service.api_keys = apiKeys;
+  await service.save();
 };

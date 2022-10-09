@@ -3,11 +3,12 @@ import Client from "mailgun.js/dist/lib/client";
 import { default as formData } from "form-data";
 import * as path from "path";
 import { renderFile } from "ejs";
+import { HydratedDocument } from "mongoose";
 import { TResource } from "../models";
 import { getTimestamp } from "../utilities";
 
 type TMailParams = {
-  resource: TResource;
+  resource: HydratedDocument<TResource>;
   apiKey?: string;
   subject: string;
   template: string;
