@@ -1,4 +1,12 @@
-const days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 const months = [
   "January",
@@ -18,7 +26,7 @@ const months = [
 export const getTimestamp = () => {
   const date = new Date();
   const day = days[date.getDay()];
-  const dt = date.getDate();
+  const dt = parseDate(String(date.getDate()));
   const month = months[date.getMonth()];
   const year = date.getFullYear();
   const hour = date.getHours();
@@ -27,4 +35,14 @@ export const getTimestamp = () => {
   mins = mins.length === 1 ? "0" + mins : mins;
   seconds = seconds.length === 1 ? "0" + seconds : seconds;
   return `${day} ${dt} ${month} ${year} ${hour}:${mins}:${seconds}`;
+};
+
+const parseDate = (dt: string) => {
+  const extensions: { [key: string]: string } = {
+    "1": "st",
+    "2": "nd",
+    "3": "rd",
+  };
+  const lastChar = dt.slice(dt.length);
+  return extensions[lastChar] ? dt + extensions[lastChar] : dt + "th";
 };

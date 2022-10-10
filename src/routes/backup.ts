@@ -1,7 +1,7 @@
 import express from "express";
 import { createBackupMiddleware, fileMiddleware } from "../middleware";
 import { createBackup } from "../actions";
-import { check } from "express-validator";
+import { check, body } from "express-validator";
 
 export const backupRouter = express.Router();
 
@@ -14,6 +14,7 @@ backupRouter.post(
       return Boolean(req?.file?.mimetype);
     })
     .withMessage("backup is required"),
+  body("format", "format is required").exists(),
   createBackupMiddleware,
   createBackup
 );

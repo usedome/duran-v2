@@ -5,7 +5,8 @@ import { TResource } from "../models";
 
 export const uploadToCloudinary = async (
   resource: HydratedDocument<TResource>,
-  file: Express.Multer.File
+  file: Express.Multer.File,
+  format: string
 ): Promise<{ uuid: string; url: string } | null> => {
   const folder = `${process.env.CLOUDINARY_FOLDER}/${resource.service.uuid}/${resource.uuid}`;
   const uuid = uuidV4();
@@ -19,6 +20,7 @@ export const uploadToCloudinary = async (
   try {
     const response = await cloudinary.uploader.upload(file.path, {
       folder,
+      format,
       public_id: uuid,
       access_mode: "public",
       resource_type: "auto",
