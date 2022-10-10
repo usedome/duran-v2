@@ -17,7 +17,11 @@ export const createBackup = async (
   const { resource_uuid } = request.params;
   const resource = await Resource.findOne({ uuid: resource_uuid });
 
-  const uploadResponse = await uploadToCloudinary(resource, request.file);
+  const uploadResponse = await uploadToCloudinary(
+    resource,
+    request.file,
+    request.body.format
+  );
 
   if (!uploadResponse)
     return throwException(
