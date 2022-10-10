@@ -23,6 +23,8 @@ WORKDIR usr/src/app
 
 COPY --from=build /usr/src/app/dist /usr/src/app/dist
 
+COPY --from=build /usr/src/app/src/templates /usr/src/app/dist/templates
+
 COPY --from=build /usr/src/app/node_modules /usr/src/app/node_modules
 
 EXPOSE 3000
