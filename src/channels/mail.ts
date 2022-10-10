@@ -27,7 +27,12 @@ export class Mail {
 
   public async send(params: TMailParams) {
     try {
-      const templatePath = path.join("src", "templates", params.template);
+      const templatePath = path.join(
+        __dirname,
+        "../",
+        "templates",
+        params.template
+      );
       const { resource } = params;
 
       renderFile(
