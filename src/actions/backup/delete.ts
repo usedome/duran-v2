@@ -3,6 +3,7 @@ import {
   deleteBackup as deleteCloudinaryBackup,
   throwException,
 } from "../../utilities";
+import { Backup } from "../../models";
 
 export const deleteBackup = async (
   request: Request,
@@ -11,8 +12,12 @@ export const deleteBackup = async (
 ) => {
   const { backup_uuid } = request.params;
 
+  const backup = await Backup.findOne({ uuid: backup_uuid });
+
+  await backup.resource.populate("service");
+
   try {
-    await deleteCloudinaryBackup(backup_uuid);
+    await deleteCloudinaryBackup(backup);
   } catch (error) {
     return throwException(
       response,

@@ -1,5 +1,6 @@
 import express from "express";
 import { createBackupMiddleware, fileMiddleware } from "../middleware";
+import { deleteBackupMiddleware } from "../middleware/backup/delete";
 import { createBackup } from "../actions";
 import { deleteBackup } from "../actions/backup/delete";
 import { check, body } from "express-validator";
@@ -20,4 +21,8 @@ backupRouter.post(
   createBackup
 );
 
-backupRouter.delete("/backups/:backup_uuid", deleteBackup);
+backupRouter.delete(
+  "/backups/:backup_uuid",
+  deleteBackupMiddleware,
+  deleteBackup
+);

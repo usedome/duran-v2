@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { HydratedDocument } from "mongoose";
 import { v4 as uuidV4 } from "uuid";
-import { TResource } from "../models";
+import { TResource, TBackup } from "../models";
 
 const initCloudinary = () => {
   cloudinary.config({
@@ -36,18 +36,24 @@ export const uploadToCloudinary = async (
   }
 };
 
-export const deleteBackup = async (uuid: string) => {
+export const deleteBackup = async (backup: HydratedDocument<TBackup>) => {
   initCloudinary();
-  const response = await cloudinary.uploader.destroy(
-    "backmeup_dev/3758c7c3-f08a-47e4-9579-423422e0c5d2/ac5b3dde-10dd-4ed3-8047-1884b3892910/" +
-      uuid,
-    {}
-  );
-  console.log(uuid);
-  console.log(response);
+  const { resource } = backup;
+  const folder = `${process.env.CLOUDINARY_FOLDER}/${resource.service.uuid}/${resource.uuid}/`;
+  const public_id = folder + backup.uuid;
+  const response = await cloudinary.uploader.destroy(public_id);
+  const errorMessage = `There was a problem deleting the backup with uuid ${backup.uuid}`;
+
   if (!response) {
     const error = new Error();
-    error.message = `There was a problem deleting the backup with uuid ${uuid}`;
+    error.message = errorMessage;
+    throw error;
+    return;
+  }
+
+  if (response?.result !== "ok") {
+    const error = new Error();
+    error.message = errorMessage;
     throw error;
   }
 };
