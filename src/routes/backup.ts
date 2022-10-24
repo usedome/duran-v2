@@ -1,6 +1,7 @@
 import express from "express";
 import { createBackupMiddleware, fileMiddleware } from "../middleware";
 import { createBackup } from "../actions";
+import { deleteBackup } from "../actions/backup/delete";
 import { check, body } from "express-validator";
 
 export const backupRouter = express.Router();
@@ -18,3 +19,5 @@ backupRouter.post(
   createBackupMiddleware,
   createBackup
 );
+
+backupRouter.delete("/backups/:backup_uuid", deleteBackup);
