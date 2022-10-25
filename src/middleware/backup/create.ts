@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { throwException, eventEmitter } from "../utilities";
-import { Resource } from "../models";
+import { throwException, eventEmitter } from "../../utilities";
+import { Resource } from "../../models";
 
 export const createBackupMiddleware = async (
   request: Request,

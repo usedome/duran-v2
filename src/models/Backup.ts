@@ -1,4 +1,5 @@
 import { Schema, model, HydratedDocument } from "mongoose";
+import { backupPlugin } from "../utilities";
 import { TResource } from "./Resource";
 
 export type TBackup = {
@@ -20,5 +21,7 @@ const backupSchema = new Schema<TBackup>(
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
   }
 );
+
+backupSchema.plugin(backupPlugin);
 
 export const Backup = model<TBackup>("Backup", backupSchema);

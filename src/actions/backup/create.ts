@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { HydratedDocument } from "mongoose";
-import { Backup, Resource, TService } from "../models";
-import { uploadToCloudinary, throwException, eventEmitter } from "../utilities";
+import { Backup, Resource, TService } from "../../models";
+import {
+  uploadToCloudinary,
+  throwException,
+  eventEmitter,
+} from "../../utilities";
 
 export const createBackup = async (
   request: Request,
