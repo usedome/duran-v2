@@ -4,7 +4,7 @@ import {
   fileMiddleware,
   corsMiddleware,
 } from "../middleware";
-import { deleteBackupMiddleware } from "../middleware/backup/delete";
+import { backupByUuidMiddleware } from "../middleware/backup/uuid";
 import { createBackup } from "../actions";
 import { deleteBackup } from "../actions/backup/delete";
 import { check, body } from "express-validator";
@@ -28,6 +28,6 @@ backupRouter.post(
 backupRouter.delete(
   "/backups/:backup_uuid",
   corsMiddleware,
-  deleteBackupMiddleware,
+  backupByUuidMiddleware,
   deleteBackup
 );

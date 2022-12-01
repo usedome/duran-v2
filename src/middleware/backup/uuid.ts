@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Backup } from "../../models";
 import { throwException } from "../../utilities";
 
-export const deleteBackupMiddleware = async (
+export const backupByUuidMiddleware = async (
   request: Request,
   response: Response,
   next: NextFunction

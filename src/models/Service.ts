@@ -2,6 +2,16 @@ import { Schema, model, HydratedDocument } from "mongoose";
 import { capitalize } from "../utilities";
 import { TUser } from "./User";
 
+type TServiceAuth = {
+  is_enabled: boolean;
+  api_keys: TServiceApiKey[];
+};
+
+type TServiceIpWhitelist = {
+  is_enabled: boolean;
+  ips: TServiceIpAddress[];
+};
+
 type TServiceApiKey = {
   name: string;
   uuid: string;
@@ -27,8 +37,8 @@ export type TService = {
   name: string;
   description?: string;
   backup_duration: string;
-  api_keys: TServiceApiKey[];
-  ips: TServiceIpAddress[];
+  auth: TServiceAuth;
+  ip_whitelist: TServiceIpWhitelist[];
   notifications: TServiceNotification;
   created_at: Date;
   updated_at: Date;
@@ -45,8 +55,8 @@ const serviceSchema = new Schema<TService>(
     },
     description: { type: String },
     backup_duration: { type: String, required: true },
-    api_keys: { type: Schema.Types.Mixed, required: true },
-    ips: { type: Schema.Types.Mixed, required: true },
+    auth: { type: Schema.Types.Mixed, required: true },
+    ip_whitelist: { type: Schema.Types.Mixed, required: true },
     notifications: { type: Schema.Types.Mixed, required: true },
   },
   {
