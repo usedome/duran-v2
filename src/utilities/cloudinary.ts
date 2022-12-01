@@ -36,11 +36,8 @@ export const uploadToCloudinary = async (
   }
 };
 
-export const deleteBackup = async (backup: HydratedDocument<TBackup>) => {
+export const deleteFromCloudinary = async (public_id: string) => {
   initCloudinary();
-  const { resource } = backup;
-  const folder = `${process.env.CLOUDINARY_FOLDER}/${resource.service.uuid}/${resource.uuid}/`;
-  const public_id = folder + backup.uuid;
   const response = await cloudinary.uploader.destroy(public_id);
 
   if (!response) {
@@ -52,7 +49,7 @@ export const deleteBackup = async (backup: HydratedDocument<TBackup>) => {
 
   if (response?.result !== "ok") {
     const error = new Error();
-    error.message = `There was a problem deleting the backup with uuid ${backup.uuid}`;
+    error.message = `There was a problem implementing the DELETE operation`;
     throw error;
   }
 };
