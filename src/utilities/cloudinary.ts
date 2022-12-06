@@ -36,20 +36,21 @@ export const uploadToCloudinary = async (
   }
 };
 
-export const deleteFromCloudinary = async (public_id: string) => {
+export const deleteFromCloudinary = async (
+  public_id: string,
+  isBackup = true
+) => {
   initCloudinary();
-  const response = await cloudinary.uploader.destroy(public_id);
+  isBackup
+    ? await cloudinary.uploader.destroy(public_id)
+    : await deleteFolder(public_id);
+};
 
-  if (!response) {
-    const error = new Error();
-    error.message = "There was a problem reaching cloudinary";
-    throw error;
-    return;
-  }
+const deleteFolder = async (public_id: string) => {
+  await cloudinary.api.delete_resources_by_prefix(
+    public_id.endsWith("/") ? public_id : public_id + "/",
+    { resource_type: "raw" }
+  );
 
-  if (response?.result !== "ok") {
-    const error = new Error();
-    error.message = `There was a problem implementing the DELETE operation`;
-    throw error;
-  }
+  return await cloudinary.api.delete_folder(public_id);
 };

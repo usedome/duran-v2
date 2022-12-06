@@ -15,7 +15,7 @@ export const authMiddleware = async (
   if (!headers?.authorization) isAuthorized = false;
   else {
     try {
-      const authUrl = (process.env.ZILCH_URL ?? "") + "/me";
+      const authUrl = (process.env.ZILCH_API_URL ?? "") + "/me";
       const { data } = await axios.get<TAuthMiddlewareResponse>(authUrl, {
         headers: { authorization: headers.authorization },
       });
@@ -27,7 +27,7 @@ export const authMiddleware = async (
     }
   }
 
-  if (!isAuthorized) throwException(res, 401, "user is not authorized");
+  if (!isAuthorized) return throwException(res, 401, "user is not authorized");
 
   next();
 };

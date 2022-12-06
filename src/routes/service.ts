@@ -7,5 +7,6 @@ export const serviceRouter = Router();
 serviceRouter.delete(
   "/services/:service_uuid",
   authMiddleware,
-  serviceByUuidMiddleware
+  serviceByUuidMiddleware,
+  deleteService
 );

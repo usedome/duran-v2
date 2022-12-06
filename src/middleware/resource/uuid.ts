@@ -14,7 +14,11 @@ export const resourceByUuidMiddleware = async (
   const resource = await Resource.findOne({ uuid });
 
   if (!resource)
-    throwException(response, 404, `resource with uuid ${uuid} does not exist`);
+    return throwException(
+      response,
+      404,
+      `resource with uuid ${uuid} does not exist`
+    );
 
   next();
 };
