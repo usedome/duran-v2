@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createBackupMiddleware,
+  authMiddleware,
   fileMiddleware,
   corsMiddleware,
 } from "../middleware";
@@ -28,6 +29,7 @@ backupRouter.post(
 backupRouter.delete(
   "/backups/:backup_uuid",
   corsMiddleware,
+  authMiddleware,
   backupByUuidMiddleware,
   deleteBackup
 );

@@ -16,6 +16,7 @@ export const deleteService = async (
     const public_id = `${process.env.CLOUDINARY_FOLDER}/${service.uuid}`;
     await deleteFromCloudinary(public_id, false);
   } catch (error) {
+    console.log(error);
     throwException(
       response,
       500,

@@ -49,6 +49,11 @@ export const deleteFromCloudinary = async (
 const deleteFolder = async (public_id: string) => {
   await cloudinary.api.delete_resources_by_prefix(
     public_id.endsWith("/") ? public_id : public_id + "/",
+    { resource_type: "image" }
+  );
+
+  await cloudinary.api.delete_resources_by_prefix(
+    public_id.endsWith("/") ? public_id : public_id + "/",
     { resource_type: "raw" }
   );
 

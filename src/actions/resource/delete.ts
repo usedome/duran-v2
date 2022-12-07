@@ -35,4 +35,7 @@ export const deleteResource = async (
         `There was a problem deleting the resource with uuid ${resource.uuid}`
     );
   }
+
+  response.status(204);
+  response.end();
 };
