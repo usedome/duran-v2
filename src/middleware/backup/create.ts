@@ -21,12 +21,14 @@ export const createBackupMiddleware = async (
   let isAuthorized = false;
   let apiKey;
 
-  if (!authHeader || authHeader.split(" ").length !== 2) isAuthorized = false;
+  const { service } = resource;
+
+  if (!service.auth.is_enabled) isAuthorized = true;
+  else if (!authHeader || authHeader.split(" ").length !== 2)
+    isAuthorized = false;
   else {
     apiKey = authHeader.split(" ")[1];
-    isAuthorized = resource.service.api_keys
-      .map(({ key }) => key)
-      .includes(apiKey);
+    isAuthorized = service.auth.api_keys.map(({ key }) => key).includes(apiKey);
   }
 
   if (!isAuthorized) {
