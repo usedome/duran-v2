@@ -18,7 +18,10 @@ export const createBackup = async (
   if (!errors.isEmpty())
     return response.status(400).json({ errors: errors.array() });
 
-  const { resource_uuid } = request.params;
+  const { subdomains, params } = request;
+  const resource_uuid =
+    subdomains.length > 0 ? subdomains[0] : params?.resource_uuid ?? "";
+
   const resource = await Resource.findOne({ uuid: resource_uuid });
 
   const uploadResponse = await uploadToCloudinary(
