@@ -5,17 +5,19 @@
             <tr>
                 <td align="center">
                     <img width="60px" height="60px" class="icon-success"
-                        src="https://res.cloudinary.com/olamileke/image/upload/v1660687381/backmeup/assets/email/check_rmths4.png" />
+                        src="https://res.cloudinary.com/olamileke/image/upload/v1673382319/dome/assets/duran/check_qeozzl.png" />
                 </td>
             </tr>
             <tr>
                 <td>
                     <div style="margin: 10px 0">
                         <p style="margin: 0 0 10px 0">
-                            Hello <%= resource.service.user.first_name %>. A new backup for <%= resource.name %> 
-                            (<%= resource.service.name %>) was just made successfully.
+                            Hello <%= resource.service.user.first_name %>. A new backup for <%= resource.name %>
+                                    (<%= resource.service.name %>) was just made successfully.
                         </p>
-                        <p><%= timestamp %></p>
+                        <p>
+                            <%= timestamp %>
+                        </p>
                     </div>
                 </td>
             </tr>
@@ -27,4 +29,4 @@
         </table>
     </div>
 
-<%- include('layouts/layout-bottom.ejs') %>
+    <%- include('layouts/layout-bottom.ejs') %>

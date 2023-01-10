@@ -7,7 +7,13 @@ export const createBackupMiddleware = async (
   response: Response,
   next: NextFunction
 ) => {
-  const { resource_uuid } = request.params;
+  const { subdomains, params } = request;
+  const resource_uuid =
+    subdomains.length > 0 ? subdomains[0] : params?.resource_uuid ?? "";
+
+  if (resource_uuid.trim() === "")
+    return throwException(response, 400, `resource uuid is required`);
+
   const resource = await Resource.findOne({ uuid: resource_uuid });
 
   if (!resource)
@@ -27,7 +33,7 @@ export const createBackupMiddleware = async (
   else if (!authHeader || authHeader.split(" ").length !== 2)
     isAuthorized = false;
   else {
-    apiKey = authHeader.split(" ")[1];
+    apiKey = authHeader.split(" ")[1] ?? "";
     isAuthorized = service.auth.api_keys.map(({ key }) => key).includes(apiKey);
   }
 
@@ -41,6 +47,13 @@ export const createBackupMiddleware = async (
       eventEmitter.emit("backup.wrong.credentials", resource, apiKey);
     return throwException(response, 401, `valid api key is needed`);
   }
+
+  if (!resource?.is_active)
+    return throwException(
+      response,
+      400,
+      `resource with uuid ${resource_uuid} is not currently active`
+    );
 
   next();
 };
