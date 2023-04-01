@@ -10,6 +10,7 @@ import { getTimestamp } from "../utilities";
 type TMailParams = {
   resource: HydratedDocument<TResource>;
   apiKey?: string;
+  ip?: string;
   subject: string;
   template: string;
 };
@@ -39,6 +40,7 @@ export class Mail {
           resource,
           timestamp: getTimestamp(),
           apiKey: params?.apiKey ?? undefined,
+          ip: params?.ip ?? undefined,
         },
         async (error, html) => {
           if (error) throw error;

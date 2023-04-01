@@ -38,7 +38,7 @@ export type TService = {
   description?: string;
   backup_duration: string;
   auth: TServiceAuth;
-  ip_whitelist: TServiceIpWhitelist[];
+  ip_whitelist: TServiceIpWhitelist;
   notifications: TServiceNotification;
   created_at: Date;
   updated_at: Date;

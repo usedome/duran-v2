@@ -7,7 +7,7 @@ export const backupSuccessfulListener = (
 ) => {
   const mail = new Mail();
   mail.send({
-    subject: `${resource.service.name} - New Backup`,
+    subject: `${resource.name} - New Backup`,
     resource,
     template: "backup-successful.ejs",
   });
@@ -21,11 +21,24 @@ export const backupWrongCredentialsListener = async (
 
   const mail = new Mail();
   mail.send({
-    subject: `${resource.service.name} - Unauthorized Backup Request`,
+    subject: `${resource.name} - Unauthorized Backup Request (Api Key)`,
     resource,
     template: "backup-wrong_credentials.ejs",
     apiKey,
   });
 };
 
-export const backupUnauthorizedIpListener = (resource: TResource) => {};
+export const backupUnauthorizedIpListener = async (
+  resource: HydratedDocument<TResource>,
+  ip?: string
+) => {
+  await resource.service.populate("user");
+
+  const mail = new Mail();
+  mail.send({
+    subject: `${resource.name} - Unauthorized Backup Request (Ip Address)`,
+    resource,
+    template: "backup-unauthorized_ip.ejs",
+    ip,
+  });
+};

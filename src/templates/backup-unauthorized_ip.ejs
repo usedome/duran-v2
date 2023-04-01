@@ -1,19 +1,22 @@
 <%- include('layouts/layout-top.ejs') %>
-
     <div class="content">
         <table align="center">
             <tr>
                 <td align="center">
-                    <img width="60px" height="60px" class="icon-success"
-                        src="https://res.cloudinary.com/olamileke/image/upload/v1673382319/dome/assets/duran/check_qeozzl.png" />
+                    <img class="icon-failure"
+                        src="https://res.cloudinary.com/olamileke/image/upload/v1673382319/dome/assets/duran/karlsson-x-sign-1_naviff.png" />
                 </td>
             </tr>
             <tr>
                 <td>
-                    <div style="margin: 10px 0">
-                        <p style="margin: 0 0 10px 0">
-                            Hello <%= resource.service.user.first_name %>. A new backup for <%= resource.name %>
-                                    (<%= resource.service.name %>) was just made successfully.
+                    <div style="margin: 15px 0">
+                        <p style="margin: 0 0 16px 0;">
+                            Hi <%= resource.service.user.first_name %>. A backup for
+                                <%= resource.name %> (<%= resource.service.name %>)
+                                        was just attempted from an unauthorized IP address.
+                        </p>
+                        <p style="width: 100%; margin: 0 0 16px 0; line-height: 25px">
+                            <%= ip %>
                         </p>
                         <p>
                             <%= timestamp %>
@@ -30,5 +33,4 @@
             </tr>
         </table>
     </div>
-
     <%- include('layouts/layout-bottom.ejs') %>
