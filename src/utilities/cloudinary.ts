@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { HydratedDocument } from "mongoose";
 import { v4 as uuidV4 } from "uuid";
-import { TResource, TBackup } from "../models";
+import { TResource } from "../models";
 
 const initCloudinary = () => {
   cloudinary.config({
@@ -11,6 +11,8 @@ const initCloudinary = () => {
     secure: true,
   });
 };
+
+const imageFormats = ["jpg", "jpeg", "png", "webp", "gif"];
 
 export const uploadToCloudinary = async (
   resource: HydratedDocument<TResource>,
@@ -27,7 +29,9 @@ export const uploadToCloudinary = async (
       format,
       public_id: uuid,
       access_mode: "public",
-      resource_type: "auto",
+      resource_type: imageFormats.includes(format.toLowerCase())
+        ? "image"
+        : "raw",
     });
     return { uuid, url: response.secure_url };
   } catch (error) {
@@ -36,14 +40,35 @@ export const uploadToCloudinary = async (
   }
 };
 
-export const deleteFromCloudinary = async (
-  public_id: string,
-  isBackup = true
+export const deleteMultipleFromCloudinary = async (
+  public_ids: string[],
+  format: string
 ) => {
   initCloudinary();
-  isBackup
-    ? await cloudinary.uploader.destroy(public_id)
-    : await deleteFolder(public_id);
+  for (const public_id of public_ids) {
+    cloudinary.uploader.destroy(public_id, {
+      resource_type: imageFormats.includes(format.toLowerCase())
+        ? "image"
+        : "raw",
+    });
+  }
+};
+
+export const deleteFromCloudinary = async (
+  public_id: string,
+  isBackup = true,
+  format = ""
+) => {
+  initCloudinary();
+  if (isBackup) {
+    cloudinary.uploader.destroy(public_id, {
+      resource_type: imageFormats.includes(format.toLowerCase())
+        ? "image"
+        : "raw",
+    });
+    return;
+  }
+  await deleteFolder(public_id);
 };
 
 const deleteFolder = async (public_id: string) => {
@@ -57,5 +82,5 @@ const deleteFolder = async (public_id: string) => {
     { resource_type: "raw" }
   );
 
-  return await cloudinary.api.delete_folder(public_id);
+  await cloudinary.api.delete_folder(public_id);
 };

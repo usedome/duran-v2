@@ -15,8 +15,10 @@ export const deleteBackup = async (
   await resource.populate("service");
 
   try {
-    const public_id = `${process.env.CLOUDINARY_FOLDER}/${resource.service.uuid}/${resource.uuid}/${backup.uuid}`;
-    await deleteFromCloudinary(public_id);
+    const public_id = `${process.env.CLOUDINARY_FOLDER}/${
+      resource.service.uuid
+    }/${resource.uuid}/${backup.uuid}.${backup?.format?.toLowerCase()}`;
+    await deleteFromCloudinary(public_id, true, backup?.format?.toLowerCase());
   } catch (error) {
     return throwException(
       response,
