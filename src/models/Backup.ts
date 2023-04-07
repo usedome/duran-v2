@@ -7,6 +7,7 @@ export type TBackup = {
   uuid: string;
   resource: HydratedDocument<TResource>;
   url: string;
+  format: string;
   created_at: Date;
   updated_at: Date;
 };
@@ -16,6 +17,7 @@ const backupSchema = new Schema<TBackup>(
     uuid: { type: String, required: true },
     resource: { type: Schema.Types.ObjectId, ref: "Resource", required: true },
     url: { type: String, required: true },
+    format: { type: String, required: true },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import { HydratedDocument } from "mongoose";
-import { Backup, Resource, TService } from "../../models";
+import { Backup, Resource, TResource, TService } from "../../models";
 import {
   uploadToCloudinary,
+  deleteMultipleFromCloudinary,
   throwException,
   eventEmitter,
 } from "../../utilities";
@@ -41,7 +42,12 @@ export const createBackup = async (
 
   await resource.service.populate("user");
 
-  const backup = await Backup.create({ uuid, url, resource: resource._id });
+  const backup = await Backup.create({
+    uuid,
+    url,
+    resource: resource._id,
+    format: request.body.format,
+  });
   const {
     service: {
       notifications: { events },
@@ -53,6 +59,8 @@ export const createBackup = async (
     updateServiceApiKey(request, resource.service);
 
   response.status(201).json({ backup, message: "backup created successfully" });
+
+  deleteElapsedBackups(resource, request.body.format);
 };
 
 const updateServiceApiKey = async (
@@ -66,4 +74,35 @@ const updateServiceApiKey = async (
   apiKeys[index] = { ...apiKeys[index], last_used: new Date() };
   service.auth.api_keys = apiKeys;
   await service.save();
+};
+
+const deleteElapsedBackups = async (
+  resource: HydratedDocument<TResource>,
+  format: string
+) => {
+  const service = resource?.service as TService;
+  const days =
+    service.backup_duration === "1w"
+      ? 7
+      : service.backup_duration === "1m"
+      ? 30
+      : 90;
+  const elapsedDate = new Date(Date.now() - days * 86400000);
+  const elapsedBackups = await Backup.find({
+    resource: resource._id,
+    created_at: { $lt: elapsedDate },
+  });
+  const backupIds = elapsedBackups.map(
+    ({ uuid }) =>
+      `${process.env.CLOUDINARY_FOLDER}/${service.uuid}/${
+        resource.uuid
+      }/${uuid}.${format.toLowerCase()}`
+  );
+
+  if (backupIds.length === 0) return;
+  deleteMultipleFromCloudinary(backupIds, format);
+  await Backup.deleteMany({
+    resource: resource._id,
+    created_at: { $lt: elapsedDate },
+  });
 };
