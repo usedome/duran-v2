@@ -10,7 +10,7 @@ COPY yarn.lock ./
 
 COPY . .
 
-RUN yarn install
+RUN yarn install --ignore-engines
 
 RUN yarn build
 
