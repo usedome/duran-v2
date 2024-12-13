@@ -1,5 +1,5 @@
 import Mailgun from "mailgun.js";
-import Client from "mailgun.js/dist/lib/client";
+import { IMailgunClient } from "mailgun.js/Interfaces";
 import { default as formData } from "form-data";
 import * as path from "path";
 import { renderFile } from "ejs";
@@ -16,7 +16,7 @@ type TMailParams = {
 };
 
 export class Mail {
-  private mailClient: Client;
+  private mailClient: IMailgunClient;
 
   constructor() {
     const mailgun = new Mailgun(formData);
